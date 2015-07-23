@@ -10,73 +10,70 @@
 
 using namespace std;
 
-unique_ptr<Program> program;
+unique_ptr < Program > program;
 
 GLfloat vertices[] = { -0.5, -0.5,
-					    0.5, -0.5,
-					    0.5,  0.5,
-					   -0.5,  0.5 };
+    0.5, -0.5,
+    0, 0.5
+};
 
 GLuint vertID;
 
 void initializeResources()
 {
-	program = unique_ptr<Program>(new Program("shader.vert", "shader.frag"));
+    program =
+        unique_ptr < Program > (new Program("shader.vert", "shader.frag"));
 
-	program->addVariable("vPosition", VariableType::ATTRIBUTE);
-	program->addVariable("vColor"	, VariableType::UNIFORM);
+    program->addVariable("vPosition", VariableType::ATTRIBUTE);
+    program->addVariable("vColor", VariableType::UNIFORM);
 
-	glGenBuffers(1, &vertID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glGenBuffers(1, &vertID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
+                 GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
+
 void onDisplay()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(program->getID());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(program->getID());
 
-	glEnableVertexAttribArray(program->getVariableID("vPosition"));
-	glBindBuffer(GL_ARRAY_BUFFER, vertID);
+    glEnableVertexAttribArray(program->getVariableID("vPosition"));
+    glBindBuffer(GL_ARRAY_BUFFER, vertID);
 
-	glVertexAttribPointer(
-        program->getVariableID("vPosition"),
-        2,                     
-        GL_FLOAT,              
-        GL_FALSE,              
-        0,                     
-        0                 
-    );
+    glVertexAttribPointer(program->getVariableID("vPosition"),
+                          2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glUniform4f(program->getVariableID("vColor"), 1.0f, 1.0f, 0.0f, 1.0f);
+    glUniform4f(program->getVariableID("vColor"), 0.0f, 1.0f, 0.0f, 0.1f);
 
-    glDrawArrays(GL_QUADS,0 ,4);
-	glDisableVertexAttribArray(program->getVariableID("vPosition"));
+    glDrawArrays(GL_TRIANGLES, 0, 4);
+    glDisableVertexAttribArray(program->getVariableID("vPosition"));
 
-	glutSwapBuffers();
-	glutPostRedisplay();
+    glutSwapBuffers();
+    glutPostRedisplay();
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(Configuration::window_width, Configuration::window_height);
-	glutCreateWindow(Configuration::program_name);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowSize(Configuration::window_width,
+                       Configuration::window_height);
+    glutCreateWindow(Configuration::program_name);
 
-	if (glewInit() != GLEW_OK)
-	{
-		cerr << "You must have OpenGL 2.0 version (or higher)!" << endl;
-		exit(EXIT_FAILURE);
-	}
+    if (glewInit() != GLEW_OK) {
+        cerr << "You must have OpenGL 2.0 version (or higher)!" << endl;
+        exit(EXIT_FAILURE);
+    }
 
-	initializeResources();
+    initializeResources();
 
-	glutDisplayFunc(onDisplay);
+    glutDisplayFunc(onDisplay);
 
-	glutMainLoop();
-	return 0;
+    glutMainLoop();
+    return 0;
 }

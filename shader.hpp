@@ -7,19 +7,18 @@
 #include <sstream>
 #include <iostream>
 
-class Shader
-{
-private:
-	GLuint _ID;
-	GLuint _type;
-	char* readFromFile(const char* filename);
-public:
+class Shader {
+  private:
+    GLuint _ID;
+    GLuint _type;
+    char *readFromFile(const char *filename);
+  public:
 
-	Shader(GLuint type);
-	int compileFrom(const char* filename);
-	void print_log();
-	GLuint getID();
+     Shader(GLuint type);
+    int compileFrom(const char *filename);
+    void print_log();
+    GLuint getID();
 
-	~Shader();
+    ~Shader();
 };
 #endif

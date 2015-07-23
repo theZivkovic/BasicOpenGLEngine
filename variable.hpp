@@ -8,17 +8,16 @@
 
 enum VariableType { ATTRIBUTE, UNIFORM };
 
-class Variable
-{
-private:
-	GLint _ID;
-	const char* _name;
-	VariableType _type;
+class Variable {
+  private:
+    GLint _ID;
+    const char *_name;
+    VariableType _type;
 
-public:
-	Variable(const char* name, VariableType type, GLuint programID);
-	bool isValid();
-	std::string getType();
-	GLuint getID();
+  public:
+     Variable(const char *name, VariableType type, GLuint programID);
+    bool isValid();
+     std::string getType();
+    GLuint getID();
 };
 #endif
