@@ -1,6 +1,8 @@
 # BasicOpenGLEngine
 
 This is a small engine for OpenGL written in C++.
+It is used to demonstrate simple computer graphics
+problems and solutions.
 
 ## Establish the environment
 
