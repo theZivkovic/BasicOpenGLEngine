@@ -1,5 +1,7 @@
 PROGRAM  = engine
-FILES 	 = main configuration shader program variable
+FILES 	 = main configuration shader \
+		   program variable mesh sphere_mesh triangle_mesh \
+		   camera
 CXX 	 = g++
 CXXFLAGS = -g -Wall -I/usr/X11R6/include -I/usr/pkg/include -std=c++11
 LDFLAGS  = -L/usr/X11R6/lib -L/usr/pkg/lib

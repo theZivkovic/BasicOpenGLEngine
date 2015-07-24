@@ -7,17 +7,14 @@
 #include "configuration.hpp"
 #include "program.hpp"
 #include "variable.hpp"
+#include "sphere_mesh.hpp"
+#include "triangle_mesh.hpp"
 
 using namespace std;
 
 unique_ptr < Program > program;
-
-GLfloat vertices[] = { -0.5, -0.5,
-    0.5, -0.5,
-    0, 0.5
-};
-
-GLuint vertID;
+unique_ptr < TriangleMesh > triangle;
+unique_ptr < SphereMesh > sphere;
 
 void initializeResources()
 {
@@ -27,11 +24,11 @@ void initializeResources()
     program->addVariable("vPosition", VariableType::ATTRIBUTE);
     program->addVariable("vColor", VariableType::UNIFORM);
 
-    glGenBuffers(1, &vertID);
-    glBindBuffer(GL_ARRAY_BUFFER, vertID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
-                 GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    triangle = unique_ptr < TriangleMesh > (new TriangleMesh());
+    triangle->initializeBuffers();
+
+    sphere = unique_ptr < SphereMesh > (new SphereMesh(0.5, 20, 20));
+    sphere->initializeBuffers();
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -42,16 +39,8 @@ void onDisplay()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(program->getID());
 
-    glEnableVertexAttribArray(program->getVariableID("vPosition"));
-    glBindBuffer(GL_ARRAY_BUFFER, vertID);
-
-    glVertexAttribPointer(program->getVariableID("vPosition"),
-                          2, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glUniform4f(program->getVariableID("vColor"), 0.0f, 1.0f, 0.0f, 0.1f);
-
-    glDrawArrays(GL_TRIANGLES, 0, 4);
-    glDisableVertexAttribArray(program->getVariableID("vPosition"));
+    triangle->draw(program, glm::vec4(1.0, 0.0, 0.0, 1.0));
+    sphere->draw(program, glm::vec4(0.0, 1.0, 0.0, 1.0));
 
     glutSwapBuffers();
     glutPostRedisplay();
