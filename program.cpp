@@ -77,8 +77,8 @@ void Program::addVariable(const char *name, VariableType type)
 
 GLuint Program::getVariableID(const char *name)
 {
-    if (_variables.find(name) == _variables.end())
-        return -1;
+    assert(_variables.find(name) != _variables.end()
+           && "Can't get variable" && name);
 
     return _variables[name];
 }

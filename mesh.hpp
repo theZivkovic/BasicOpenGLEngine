@@ -17,6 +17,7 @@ class Mesh {
      GLfloat * _vertices;
     GLfloat *_normals;
     int _nVertices;
+    int _nNormals;
     GLenum _howToDraw;
     int _coordsPerVertex;
 

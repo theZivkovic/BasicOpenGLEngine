@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <unordered_map>
+#include <assert.h>
 
 #include "variable.hpp"
 #include "shader.hpp"
