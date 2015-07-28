@@ -7,9 +7,13 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <memory>
 
+#include "program.hpp"
 
 class Camera {
   private:
@@ -25,12 +29,18 @@ class Camera {
     void setPerspective(GLfloat fieldOfView, GLfloat aspectRatio,
                         GLfloat nearPlane, GLfloat farPlane);
     void lookAt(glm::vec3 target);
-     glm::mat4 matrix();
-     glm::mat4 orientation();
+    glm::mat4 matrix();
+    glm::mat4 orientation();
+    glm::vec3 position();
+    glm::vec3 forward();
 
     void rotateHorizontal(float dangle);
     void rotateVertical(float dangle);
     void zoom(float times);
+
+    void initializeInProgram(std::unique_ptr < Program > &program);
+    void applyInProgram(std::unique_ptr < Program > &program);
+
     ~Camera();
 };
 #endif

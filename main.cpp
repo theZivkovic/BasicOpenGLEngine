@@ -25,26 +25,26 @@ unique_ptr < SphereMesh > sphere;
 unique_ptr < Camera > camera;
 unique_ptr < Light > light;
 
+float a = 0;
+
 void initializeResources()
 {
-    program =
-        unique_ptr < Program > (new Program("shader.vert", "shader.frag"));
+    program = unique_ptr < Program > (new Program("shader.vert", "shader.frag"));
 
     camera = unique_ptr < Camera > (new Camera());
+    camera->initializeInProgram(program);
 
     program->addVariable("vPosition", VariableType::ATTRIBUTE);
     program->addVariable("vColor", VariableType::UNIFORM);
-    program->addVariable("camera", VariableType::UNIFORM);
     program->addVariable("vNormal", VariableType::ATTRIBUTE);
-    program->addVariable("lightPosition", VariableType::UNIFORM);
-
+    
+    
     light = unique_ptr < Light > (new Light());
-    light->setPosition(glm::vec4(10, 10, 10, 1));
+    light->setPosition(glm::vec4(10, 10, 0, 1));
     light->initializeInProgram(program);
 
     sphere = unique_ptr < SphereMesh > (new SphereMesh(0.5, 50, 50));
     sphere->initializeBuffers();
-
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -56,15 +56,18 @@ void onDisplay()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(program->getID());
 
-    // set light and write a code to use it in shader too
+    light->setPosition(glm::vec4(10 * cos(a), 10 * sin(a), -10, 1));
+    light->applyInProgram(program);
 
-    glUniformMatrix4fv(program->getVariableID("camera"), 1, false,
-                       glm::value_ptr(camera->matrix()));
+    camera->applyInProgram(program);
+    
+    sphere->draw(program, glm::vec4(0.0, 0.0, 0.5, 1.0));
 
-    sphere->draw(program, glm::vec4(0.0, 0.5, 0.0, 1.0));
-
+    a+=0.05;
+    
     glutSwapBuffers();
     glutPostRedisplay();
+
 }
 
 int main(int argc, char **argv)
